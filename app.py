@@ -1,3 +1,4 @@
+%%writefile app.py
 
 import streamlit as st
 import pandas as pd
@@ -5,24 +6,12 @@ import numpy as np
 import joblib
 from sklearn.preprocessing import StandardScaler
 
-# --- 1. Cargar el modelo y el escalador (si es necesario) ---
-# Cargamos el modelo (RandomForestClassifier) que guardamos
+# --- 1. Cargar el modelo y el escalador --- 
+# Cargamos el modelo (RandomForestClassifier)
 model = joblib.load('modelo_desercion.pkl')
 
-# Es crucial usar el mismo StandardScaler con el que se entrenó el modelo
-# Si no lo guardamos, necesitamos crear uno nuevo y 'ajustarlo' con algunos datos
-# Para este ejemplo, supondremos que X_train (o un subconjunto) está disponible
-# En un escenario real, deberíamos guardar el 'scaler' junto con el modelo.
-
-# Para fines de demostración, recrearemos un scaler similar. 
-# IMPORTANTE: En un entorno de producción, DEBERÍAS guardar y cargar el scaler original.
-# Aquí usamos X_train que ya tenemos en memoria (asumiendo que se ejecutó previamente)
-# o podrías cargarlo desde un archivo si lo guardaste.
-
-# Recrear el scaler usando los datos de entrenamiento originales (no escalados) para ajustarlo
-# Asumimos que X_train existe del notebook anterior
-scaler = StandardScaler()
-scaler.fit(X_train) # Ajustar con los datos originales no escalados
+# Cargamos el escalador que fue guardado
+scaler = joblib.load('scaler.pkl')
 
 # --- 2. Configuración de la aplicación Streamlit ---
 st.set_page_config(page_title='Predicción de Deserción Estudiantil', layout='centered')
@@ -82,4 +71,3 @@ if st.button('Realizar Predicción'):
 
     st.markdown('---')
     st.info('Esta predicción es un indicador y no un diagnóstico definitivo. Siempre se recomienda la intervención humana y el análisis contextual.')
-
